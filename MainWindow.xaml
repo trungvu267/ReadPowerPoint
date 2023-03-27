@@ -1,0 +1,58 @@
+﻿<Window x:Class="TestReadPowerpoint.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TestReadPowerpoint"
+        xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Border Grid.Row="0" Background="#2196F3" Padding="10">
+            <TextBlock Text="Read PPTX" FontSize="20" FontWeight="Bold" Foreground="White"/>
+        </Border>
+
+        <!-- Main content -->
+        <Grid Grid.Row="1" Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="11*"/>
+                <ColumnDefinition Width="184*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- File path -->
+            <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0 0 0 10" Grid.ColumnSpan="2">
+                <TextBlock Text="File path:" VerticalAlignment="Center"/>
+                <TextBox x:Name="FilePathTextBox" Margin="10 0" Width="500"/>
+                <Button Content="Browse" Margin="10 0" Padding="10 5" Click="BrowseButton_Click"/>
+            </StackPanel>
+
+            <!-- Slide list -->
+            <!--<ListBox x:Name="SlideListBox" Grid.Row="1"/>-->
+
+            <!--display a image-->
+
+            <Image x:Name="PowerPointImage" Width="200" Height="200" />
+            <!--<Image Source="https://www.shutterstock.com/image-photo/mountains-under-mist-morning-amazing-260nw-1725825019.jpg" Width="200" Height="200" />-->
+            <!--dislay images-->
+            <ListBox Grid.Row="1" ItemsSource="{Binding Images}" Grid.ColumnSpan="2">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Image Source="{Binding}" Height="100" Width="100" Margin="5"/>
+                        <!--<Image Source="https://www.shutterstock.com/image-photo/mountains-under-mist-morning-amazing-260nw-1725825019.jpg" Width="200" Height="200" />-->
+
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Grid>
+    </Grid>
+</Window>
