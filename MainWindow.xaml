@@ -36,34 +36,12 @@
                 <Button Content="Browse" Margin="10 0" Padding="10 5" Click="BrowseButton_Click"/>
             </StackPanel>
 
-            <!-- Slide list -->
-            <!--<ListBox x:Name="SlideListBox" Grid.Row="1"/>-->
-
-            <!--display a image-->
-
-            <!--<Image Source="https://www.shutterstock.com/image-photo/mountains-under-mist-morning-amazing-260nw-1725825019.jpg" Width="200" Height="200" />-->
-            <!--dislay images-->
-            <!--<ListBox Grid.Row="1" ItemsSource="{Binding Images}" Grid.ColumnSpan="2">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <Image Source="{Binding}" Height="100" Width="100" Margin="5"/>
-                    
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>-->
-            
-            <!--Test canvas-->
-            <!--<Canvas x:Name="myCanvas">
-                <Image Source="https://www.shutterstock.com/image-photo/mountains-under-mist-morning-amazing-260nw-1725825019.jpg" Canvas.Top="50" Canvas.Left="100" Width="200" Height="200" />
-                <TextBlock Text="Hello, world!" Canvas.Top="300" Canvas.Left="100" FontSize="24" />
-            </Canvas>-->
-
             <ListBox Grid.Row="1" ItemsSource="{Binding CustomShapes}" Grid.ColumnSpan="2">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <Grid>
                             <TextBlock Text="{Binding TextShape}"/>
-                            <Image Source="{Binding ImageShape}" Height="100" Width="100" Margin="5"/>
+                            <Image Source="{Binding ImageShape}" Height="auto" Width="auto" Margin="5"/>
                         </Grid>
 
                     </DataTemplate>

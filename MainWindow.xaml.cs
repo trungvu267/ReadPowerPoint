@@ -30,17 +30,19 @@ namespace TestReadPowerpoint
     /// </summary>
     public partial class MainWindow : Window
     {
+        public ObservableCollection<BitmapImage> Images { get; set; }
+        public ObservableCollection<CustomShape> CustomShapes { get; set; }
 
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = this;
 
-            ReadPPTX();
+            //ReadPPTX();
+            ReadPPTX("C:\\Users\\vutru\\OneDrive\\Desktop\\nhom1.pptx");
+
         }
-        public ObservableCollection<BitmapImage> Images { get; set; }
-        public ObservableCollection<string> texts { get; set; }
 
-        public ObservableCollection<CustomShape> CustomShapes { get; set; }
         public class Position
         {
             public double Top { get; set; }
@@ -53,108 +55,41 @@ namespace TestReadPowerpoint
             public string TextShape { get; set; }
             public BitmapImage ImageShape { get; set; }
         }
-        private void ReadPPTX()
+        public async Task ReadPPTX(string path)
         {
-
-            // Load the PowerPoint file
-            using (IPresentation presentation = Presentation.Open("C:\\Users\\vutru\\OneDrive\\Desktop\\nhom1.pptx"))
-            {
-                DataContext = this;
-
-                Images = new ObservableCollection<BitmapImage>();
-                texts = new ObservableCollection<string>();
-                CustomShapes = new ObservableCollection<CustomShape>();
-
-                //Loop through each slide in the presentation
-
-                //Main Logic
-                foreach (ISlide slide in presentation.Slides)
+                using (IPresentation presentation = Presentation.Open(path))
                 {
-                    // Loop through all the shapes in the slide
-                    foreach (IShape shape in slide.Shapes)
+                    CustomShapes = new ObservableCollection<CustomShape>();
+
+                    //Loop through each slide in the presentation
+
+                    //Main Logic
+                    foreach (ISlide slide in presentation.Slides)
                     {
-                        CustomShape customShape = new CustomShape();
-                        // Check if the shape is a text box
-                        if (shape is IPicture)
+                        // Loop through all the shapes in the slide
+                        foreach (IShape shape in slide.Shapes)
                         {
-                            //Images.Add(GetSlideImage(shape));
-                            customShape.ImageShape = (GetSlideImage(shape));
+                            CustomShape customShape = new CustomShape();
+                            // Check if the shape is a text box
+                            if (shape is IPicture)
+                            {
+                                //Images.Add(GetSlideImage(shape));
+                                customShape.ImageShape = (GetSlideImage(shape));
 
 
+                            }
+                            else if (shape is IShape)
+                            {
+                                IShape textBox = (IShape)shape;
+                                string text = textBox.TextBody.Text;
+                                customShape.TextShape = text;
+                            }
+                            CustomShapes.Add(customShape);
                         }
-                        else if (shape is IShape )
-                        {
-                            // Get the text from the text box
-                            IShape textBox = (IShape)shape;
-                            string text = textBox.TextBody.Text;
-                            customShape.TextShape = text;
-                            // Do something with the text
-                            //Console.WriteLine(text);
-                            //MessageBox.Show($"{text}");
-
-                        }
-                        else
-                        {
-                            //MessageBox.Show($"dont get data {slide.SlideNumber}");
-                            MessageBox.Show($"hi");
-
-
-                        }
-                        CustomShapes.Add(customShape);
-                    }
-                    //slide page
-                    //MessageBox.Show($"Author -  {slide.SlideNumber}");
-                    //MessageBox.Show($"{customShapes[2].ImageShape}");
                 }
-                //ISlide slide = presentation.Slides[0];
-
-                // 
-
-                // Do something with the list of slide texts (e.g., display it in a message box)
-                //MessageBox.Show("Author - {0}", presentation.BuiltInDocumentProperties.Title);
-                // Get the first slide
-                //ISlide slide = presentation.Slides[2];
-
-                // Get the 3nd slide for test
-                //ISlide slide3 = presentation.Slides[3];
-
-                // lấy ảnh trong nhiều slides
-                //foreach (ISlide slide in presentation.Slides)
-                //{
-                //    foreach (IShape shape in slide.Shapes)
-                //    {
-                //        if (shape is IPicture)
-                //        {
-
-                //            Images.Add(GetSlideImage(shape));
-                //        }
-                //    }
-                //}
-                //for test
-                //ISlide slide = presentation.Slides[0];
-
-                //// Iterate through the shapes in the slide and get their positions
-                //foreach (IShape shape in slide.Shapes)
-                //{
-                   
-                   
-
-                //    if (shape is IShape)
-                //    {
-
-                //        IShape textBox = (IShape)shape;
-                //        string text = textBox.TextBody.Text;
-                //        texts.Add(text);
-                //        // Do something with the text
-                     
-                //    }
-                //}
-
-
-
-
 
             }
+
         }
         private void BrowseButton_Click(object sender, RoutedEventArgs e)
         {
@@ -170,7 +105,7 @@ namespace TestReadPowerpoint
             if (result == true)
             {
                 FilePathTextBox.Text = openFileDialog.FileName;
-                ReadPPTX();
+                //ReadPPTX();
             }
         }
         private BitmapImage GetSlideImage(IShape shape)
@@ -193,9 +128,9 @@ namespace TestReadPowerpoint
         public Position GetShapePosition(IShape shape)
         {
             Position position = new Position();
-            position.Left= shape.Left;
-            position.Top=   shape.Top;
-            position.Width =  shape.Width;
+            position.Left = shape.Left;
+            position.Top = shape.Top;
+            position.Width = shape.Width;
             position.Height = shape.Height;
             return position;
         }
