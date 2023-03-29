@@ -61,16 +61,18 @@ namespace TestReadPowerpoint
                 {
                     CustomShapes = new ObservableCollection<CustomShape>();
 
-                    //Loop through each slide in the presentation
+                    
 
                     //Main Logic
+                    // Lặp qua các slide 
                     foreach (ISlide slide in presentation.Slides)
                     {
+                        // Lặp qua các shape trong slided
                         // Loop through all the shapes in the slide
                         foreach (IShape shape in slide.Shapes)
                         {
                             CustomShape customShape = new CustomShape();
-                            // Check if the shape is a text box
+                            // Kiểm tra xem shape có phải là hình ảnh ko
                             if (shape is IPicture)
                             {
                                 //Images.Add(GetSlideImage(shape));
@@ -78,6 +80,7 @@ namespace TestReadPowerpoint
 
 
                             }
+                            // Nếu ko phải hình ảnh sẽ chạy vào condition này
                             else if (shape is IShape)
                             {
                                 IShape textBox = (IShape)shape;
@@ -91,6 +94,7 @@ namespace TestReadPowerpoint
             }
 
         }
+        // Method mở ra dialog chọn file
         private void BrowseButton_Click(object sender, RoutedEventArgs e)
         {
             // Create an open file dialog
@@ -108,6 +112,7 @@ namespace TestReadPowerpoint
                 //ReadPPTX();
             }
         }
+        // Lấy kiểu dữ liệu bitmap cho hình ảnh
         private BitmapImage GetSlideImage(IShape shape)
         {
             IPicture picture = (IPicture)shape;
@@ -120,10 +125,10 @@ namespace TestReadPowerpoint
             bitmap.CacheOption = BitmapCacheOption.OnLoad;
             bitmap.EndInit();
 
-            // Set the source of the Image element in your WPF UI
             return bitmap;
 
         }
+        // Method này chưa dùng đến
         //GetShapePositions
         public Position GetShapePosition(IShape shape)
         {
