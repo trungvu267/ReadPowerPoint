@@ -37,12 +37,7 @@ namespace TestReadPowerpoint
         {
             InitializeComponent();
             DataContext = this;
-
-            //ReadPPTX();
-            ReadPPTX("C:\\Users\\vutru\\OneDrive\\Desktop\\nhom1.pptx");
-
         }
-
         public class Position
         {
             public double Top { get; set; }
@@ -55,61 +50,54 @@ namespace TestReadPowerpoint
             public string TextShape { get; set; }
             public BitmapImage ImageShape { get; set; }
         }
-        public async Task ReadPPTX(string path)
+        public async Task ReadPPTX(string path, ObservableCollection<CustomShape> customShapes)
         {
-                using (IPresentation presentation = Presentation.Open(path))
+            using (IPresentation presentation = Presentation.Open(path))
+            {
+                CustomShapes = new ObservableCollection<CustomShape>();
+                //Main Logic
+                // Lặp qua các slide 
+                foreach (ISlide slide in presentation.Slides)
                 {
-                    CustomShapes = new ObservableCollection<CustomShape>();
-
-                    
-
-                    //Main Logic
-                    // Lặp qua các slide 
-                    foreach (ISlide slide in presentation.Slides)
+                    // Lặp qua các shape trong slided
+                    // Loop through all the shapes in the slide
+                    foreach (IShape shape in slide.Shapes)
                     {
-                        // Lặp qua các shape trong slided
-                        // Loop through all the shapes in the slide
-                        foreach (IShape shape in slide.Shapes)
+                        CustomShape customShape = new CustomShape();
+                        // Kiểm tra xem shape có phải là hình ảnh ko
+                        if (shape is IPicture)
                         {
-                            CustomShape customShape = new CustomShape();
-                            // Kiểm tra xem shape có phải là hình ảnh ko
-                            if (shape is IPicture)
-                            {
-                                //Images.Add(GetSlideImage(shape));
-                                customShape.ImageShape = (GetSlideImage(shape));
-
-
-                            }
-                            // Nếu ko phải hình ảnh sẽ chạy vào condition này
-                            else if (shape is IShape)
-                            {
-                                IShape textBox = (IShape)shape;
-                                string text = textBox.TextBody.Text;
-                                customShape.TextShape = text;
-                            }
-                            CustomShapes.Add(customShape);
+                            //Images.Add(GetSlideImage(shape));
+                            customShape.ImageShape = (GetSlideImage(shape));
                         }
+                        // Nếu ko phải hình ảnh sẽ chạy vào condition này
+                        else if (shape is IShape)
+                        {
+                            IShape textBox = (IShape)shape;
+                            string text = textBox.TextBody.Text;
+                            customShape.TextShape = text;
+                        }
+                        CustomShapes.Add(customShape);
+                    }
                 }
-
             }
-
         }
         // Method mở ra dialog chọn file
-        private void BrowseButton_Click(object sender, RoutedEventArgs e)
+        private async void BrowseButton_Click(object sender, RoutedEventArgs e)
         {
-            // Create an open file dialog
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "PowerPoint Presentation (*.pptx)|*.pptx";
-            openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
+            dlg.DefaultExt = ".pptx";
+            dlg.Filter = "PowerPoint documents (.pptx)|*.pptx";
 
-            // Show the dialog and get the result
-            bool? result = openFileDialog.ShowDialog();
+            bool? result = dlg.ShowDialog();
 
-            // If the user clicked "OK", update the file path text box
             if (result == true)
             {
-                FilePathTextBox.Text = openFileDialog.FileName;
-                //ReadPPTX();
+                FilePathTextBox.Text = dlg.FileName;
+                string filename = dlg.FileName;
+
+                await ReadPPTX(filename, CustomShapes);
+                MyListBox.ItemsSource = CustomShapes;
             }
         }
         // Lấy kiểu dữ liệu bitmap cho hình ảnh

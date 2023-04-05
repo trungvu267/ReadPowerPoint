@@ -36,14 +36,13 @@
                 <Button Content="Browse" Margin="10 0" Padding="10 5" Click="BrowseButton_Click"/>
             </StackPanel>
 
-            <ListBox Grid.Row="1" ItemsSource="{Binding CustomShapes}" Grid.ColumnSpan="2">
-                <ListBox.ItemTemplate>
+            <ListBox x:Name="MyListBox" Grid.Row="1" ItemsSource="{Binding CustomShapes}" Grid.ColumnSpan="2">
+                <ListBox.ItemTemplate>  
                     <DataTemplate>
                         <Grid>
                             <TextBlock Text="{Binding TextShape}"/>
                             <Image Source="{Binding ImageShape}" Height="auto" Width="auto" Margin="5"/>
                         </Grid>
-
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
